@@ -2,26 +2,19 @@ package kodlama.io.rentACar.webApi.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import kodlama.io.rentACar.business.abstracts.BrandService;
 import kodlama.io.rentACar.business.requests.CreateBrandRequest;
 import kodlama.io.rentACar.business.responses.GetAllBrandsResponse;
 
-@RestController //This class is a data access object.
+@RestController
 @RequestMapping("/api/brands")
+@AllArgsConstructor
 public class BrandsController {
 	private BrandService brandService;
-	
-	@Autowired
-	public BrandsController(BrandService brandService) {
-		this.brandService = brandService;
-	}
 	
 	@GetMapping("/getall")
 	public List<GetAllBrandsResponse> getAll(){
@@ -29,10 +22,8 @@ public class BrandsController {
 	}
 	
 	@PostMapping("/add")
-	public void add(@RequestBody CreateBrandRequest createBrandRequest) { //Sen bana bir createBrandRequest ver. 
-		this.brandService.add(createBrandRequest); //Bende createBrandRequest brandService'ime ekleyeyim.
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public void add(@RequestBody CreateBrandRequest createBrandRequest) {
+		this.brandService.add(createBrandRequest);
 	}
-	
-	//Update-delete operasyonlarını biz yapacağız.
-	
 }

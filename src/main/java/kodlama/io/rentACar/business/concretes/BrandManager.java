@@ -1,9 +1,10 @@
 package kodlama.io.rentACar.business.concretes;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import kodlama.io.rentACar.core.utilities.mappers.ModelMapperService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import kodlama.io.rentACar.business.abstracts.BrandService;
@@ -12,40 +13,27 @@ import kodlama.io.rentACar.business.responses.GetAllBrandsResponse;
 import kodlama.io.rentACar.dataAccess.abstracts.BrandRepository;
 import kodlama.io.rentACar.entities.concretes.Brand;
 
-@Service //This class is a business object.
+@Service
+@AllArgsConstructor
 public class BrandManager implements BrandService {
 	
 	private BrandRepository brandRepository;
-	
-	@Autowired
-	public BrandManager(BrandRepository brandRepository) {
-		this.brandRepository = brandRepository;
-	}
+	private ModelMapperService modelMapperService;
 	
 	@Override
 	public List<GetAllBrandsResponse> getAll(){
-		//Business Rules
-		//We dont want to show all entity datas to the user. So we are going to do below actions.
-		List<Brand> brands = brandRepository.findAll(); //ben buradaki listeyi satır 26 deki listenin tipine (GetAllBrandsResponse) çevirmem gerekiyor.
-		List<GetAllBrandsResponse> brandsResponse = new ArrayList<GetAllBrandsResponse>(); //Burada boş bir liste oluşturuyorum.
-		
-		for (Brand brand : brands) { //Ana listeyi dolaşıyorum 
-			GetAllBrandsResponse responseItem = new GetAllBrandsResponse(); //responseItem tanımlıyorum.
-			responseItem.setId(brand.getId()); //Her seferinde her markanın id'sini ve satır 34'de ki gibi name'ini responseItem'a set ediyorum.
-			responseItem.setName(brand.getName());
-			
-			brandsResponse.add(responseItem); //responseItem'dan aldıklarımı brandsResponse adlı boş listeme add yap. Satır 39'da da bunu döndür diyorum. 
-		}
+		List<Brand> brands = brandRepository.findAll();
+		List<GetAllBrandsResponse> brandsResponse = brands.stream()
+				.map(brand -> this.modelMapperService.forResponse().map(brand, GetAllBrandsResponse.class))
+				.collect(Collectors.toList()); //stream() elimizde bir liste, nesne var ise onu tek tek dolaşmamızı sağlıyor. collect(Collectors.toList()) map edilmiş nesneleri toplayıp list tipine çevir demek.
 		
 		return brandsResponse;
 	}
 	
 	@Override
 	public void add(CreateBrandRequest createBrandRequest) {
-		Brand brand = new Brand(); //Bir brand oluşturduk.
-		brand.setName(createBrandRequest.getName()); //Bu brand'in setName'i createBrandRequest'den gelen name'dir.
+		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
 		
-		this.brandRepository.save(brand); //Bu brand'i de brandRepository'ye save edeceğim.
+		this.brandRepository.save(brand);
 	}
-	
 }
