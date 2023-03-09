@@ -16,31 +16,31 @@ import kodlama.io.rentACar.business.responses.GetAllBrandsResponse;
 @RequestMapping("/api/brands")
 @AllArgsConstructor
 public class BrandsController {
-	private BrandService brandService;
-	
-	@GetMapping("/getall")
-	public List<GetAllBrandsResponse> getAll(){
-		return brandService.getAll();
-	}
+    private BrandService brandService;
 
-	@GetMapping("/getbyid/{id}")
-	public GetByIdBrandResponse getById(@PathVariable int id){
-		return brandService.getById(id);
-	}
-	
-	@PostMapping("/add")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public void add(@RequestBody() CreateBrandRequest createBrandRequest) {
-		this.brandService.add(createBrandRequest);
-	}
+    @GetMapping("/getall")
+    public List<GetAllBrandsResponse> getAll() {
+        return brandService.getAll();
+    }
 
-	@PutMapping("/update")
-	public void update(@RequestBody() UpdateBrandRequest updateBrandRequest){
-		this.brandService.update(updateBrandRequest);
-	}
+    @GetMapping("/getbyid/{id}")
+    public GetByIdBrandResponse getById(@PathVariable int id) {
+        return brandService.getById(id);
+    }
 
-	@DeleteMapping("/delete/{id}")
-	public void delete(@PathVariable int id){
-		this.brandService.delete(id);
-	}
+    @PostMapping("/add")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void add(@RequestBody() CreateBrandRequest createBrandRequest) {
+        this.brandService.add(createBrandRequest);
+    }
+
+    @PutMapping("/update")
+    public void update(@RequestBody() UpdateBrandRequest updateBrandRequest) {
+        this.brandService.update(updateBrandRequest);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable int id) {
+        this.brandService.delete(id);
+    }
 }

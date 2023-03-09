@@ -18,42 +18,42 @@ import kodlama.io.rentACar.entities.concretes.Brand;
 @Service
 @AllArgsConstructor
 public class BrandManager implements BrandService {
-	
-	private BrandRepository brandRepository;
-	private ModelMapperService modelMapperService;
-	
-	@Override
-	public List<GetAllBrandsResponse> getAll(){
-		List<Brand> brands = brandRepository.findAll();
-		List<GetAllBrandsResponse> brandsResponse = brands.stream()
-				.map(brand -> this.modelMapperService.forResponse().map(brand, GetAllBrandsResponse.class))
-				.collect(Collectors.toList()); //stream() elimizde bir liste, nesne var ise onu tek tek dolaşmamızı sağlıyor. collect(Collectors.toList()) map edilmiş nesneleri toplayıp list tipine çevir demek.
-		
-		return brandsResponse;
-	}
 
-	@Override
-	public GetByIdBrandResponse getById(int id) {
-		Brand brand = this.brandRepository.findById(id).orElseThrow();
-		GetByIdBrandResponse response = this.modelMapperService.forResponse().map(brand, GetByIdBrandResponse.class);
+    private BrandRepository brandRepository;
+    private ModelMapperService modelMapperService;
 
-		return response;
-	}
+    @Override
+    public List<GetAllBrandsResponse> getAll() {
+        List<Brand> brands = brandRepository.findAll();
+        List<GetAllBrandsResponse> brandsResponse = brands.stream()
+                .map(brand -> this.modelMapperService.forResponse().map(brand, GetAllBrandsResponse.class))
+                .collect(Collectors.toList()); //stream() elimizde bir liste, nesne var ise onu tek tek dolaşmamızı sağlıyor. collect(Collectors.toList()) map edilmiş nesneleri toplayıp list tipine çevir demek.
 
-	@Override
-	public void add(CreateBrandRequest createBrandRequest) {
-		Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
-		this.brandRepository.save(brand);
-	}
+        return brandsResponse;
+    }
 
-	@Override
-	public void update(UpdateBrandRequest updateBrandRequest) {
-		Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
-		this.brandRepository.save(brand);
-	}
+    @Override
+    public GetByIdBrandResponse getById(int id) {
+        Brand brand = this.brandRepository.findById(id).orElseThrow();
+        GetByIdBrandResponse response = this.modelMapperService.forResponse().map(brand, GetByIdBrandResponse.class);
 
-	@Override
-	public void delete(int id) {
-		this.brandRepository.deleteById(id);
-	}
+        return response;
+    }
+
+    @Override
+    public void add(CreateBrandRequest createBrandRequest) {
+        Brand brand = this.modelMapperService.forRequest().map(createBrandRequest, Brand.class);
+        this.brandRepository.save(brand);
+    }
+
+    @Override
+    public void update(UpdateBrandRequest updateBrandRequest) {
+        Brand brand = this.modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
+        this.brandRepository.save(brand);
+    }
+
+    @Override
+    public void delete(int id) {
+        this.brandRepository.deleteById(id);
+    }
 }
