@@ -11,11 +11,13 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateBrandRequest {
-    //id is automatically increases so we dont need id here.
-
+public class CreateModelRequest {
     @NotNull
     @NotBlank
     @Size(min = 3, max = 20)
     private String name;
+
+    @NotNull
+    @NotBlank
+    private int brandId;
 }
